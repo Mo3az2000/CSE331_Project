@@ -52,11 +52,8 @@ void xml_to_jason(string xml)
                     put_comma = true;
                     get_closing_tag(tags, xml_line, ++i);
                 }
-                // else if(xml_line[i] == '<' && xml_line[i+1] != '/') get_closing_tag(tags, xml_line, ++i);
-                // else
-                // {
-
-                // }
+                //else if(xml_line[i] == '<' && xml_line[i+1] != '/') get_closing_tag(tags, xml_line, ++i);
+                else while(xml_line[i] < xml_line.size()) jason += xml_line[i];
             }
 
             xml_file.close();
