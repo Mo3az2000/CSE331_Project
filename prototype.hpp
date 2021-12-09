@@ -4,6 +4,8 @@
 #include <stack>
 #include <string>
 #include <fstream>
+#include "spacingFunction.hpp"
+#include "eraseSpaces.hpp"
 
 bool check_XML(string xml);
 void correct(string xml);
