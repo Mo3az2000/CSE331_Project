@@ -3,7 +3,7 @@
 using namespace std;
 
 bool isText(char S) {
-    if (S == '<') {
+    if (S == '<' || S=='\000') {
         return false;
     }
     return true;
@@ -24,7 +24,6 @@ string generateCloseTag(string S) {
 }
 
 void detectError(string S) {
-    int flag = 0;
     stack < string > st;
     string temp;
     fstream myFile;
@@ -35,6 +34,7 @@ void detectError(string S) {
     if (myOutput.is_open()) {
         if (myFile.is_open()) {
             while (getline(myFile, line)) {
+                int flag = 0;
                 for (int i = 0; i < line.length(); i++) {
                     if (line[i] == '<') {
                         for (int j = i; j < line.length(); j++) {
@@ -64,20 +64,28 @@ void detectError(string S) {
                                 } else if (isOpenTag(temp)) {
                                     st.push(temp);
                                 }
-                                // else
-                                // {
-                                //     if (st.empty())
-                                //     {
-                                //         return false;
-                                //     }
-                                //     string top = st.top();
-                                //     string closedTop = generateCloseTag(top);
-                                //     if(closedTop == temp)
-                                //     {
-                                //         st.pop();
-
-                                //     }
-                                // }
+                                else
+                                {
+                                    if (st.empty())
+                                    {
+                                        flag = 1;
+                                        myOutput << line << "     Error Here" << endl;
+                                        goto level_2;
+                                    }
+                                    string top = st.top();
+                                    string closedTop = generateCloseTag(top);
+                                    if(closedTop == temp)
+                                    {
+                                        st.pop();
+                                    }
+                                    else
+                                    {
+                                        st.pop();
+                                        flag = 1;
+                                        myOutput << line << "     Error Here" << endl;
+                                        goto level_2;
+                                    }
+                                }
                                 if (flag == 0)
                                     myOutput << line << endl;
                                     goto level_2;
