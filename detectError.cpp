@@ -2,28 +2,32 @@
 
 using namespace std;
 
-bool isText(char S) {
-    if (S == '<' || S=='\000') {
+bool isText(char S) 
+{
+    if (S == '<' || S=='\000') 
         return false;
-    }
+
     return true;
 }
 
-bool isOpenTag(string S) {
-    if (S[1] != '/') {
+bool isOpenTag(string S) 
+{
+    if (S[1] != '/') 
         return true;
-    }
+
     return false;
 }
 
-string generateCloseTag(string S) {
+string generateCloseTag(string S) 
+{
     string a = "<";
     string b = "/";
     string closedTop = a + b + S.substr(1);
     return closedTop;
 }
 
-void detectError(string S) {
+void detectError(string S) 
+{
     stack < string > st;
     string temp;
     fstream myFile;
@@ -31,16 +35,24 @@ void detectError(string S) {
     string line;
     myFile.open(S, ios:: in ); //read only
     myOutput.open("output.txt", ios::out); // write only
-    if (myOutput.is_open()) {
-        if (myFile.is_open()) {
-            while (getline(myFile, line)) {
+    if (myOutput.is_open()) 
+    {
+        if (myFile.is_open()) 
+        {
+            while (getline(myFile, line)) 
+            {
                 int flag = 0;
-                for (int i = 0; i < line.length(); i++) {
-                    if (line[i] == '<') {
-                        for (int j = i; j < line.length(); j++) {
-                            if (line[j] == '>') {
+                for (int i = 0; i < line.length(); i++) 
+                {
+                    if (line[i] == '<') 
+                    {
+                        for (int j = i; j < line.length(); j++) 
+                        {
+                            if (line[j] == '>') 
+                            {
                                 temp = line.substr(i, j - i + 1);
-                                if (isText(line[j + 1])) {
+                                if (isText(line[j + 1])) 
+                                {
                                     if(line.back() != '>')
                                     {
                                         flag = 1;
@@ -61,7 +73,19 @@ void detectError(string S) {
                                             goto level_2;
                                         }
                                     }
-                                } else if (isOpenTag(temp)) {
+                                } else if (isOpenTag(temp)) 
+                                {
+                                    if(!st.empty())
+                                    {
+                                        string top2 = st.top();
+                                        if(temp == top2)
+                                        {
+                                            flag = 1;
+                                            myOutput << "Error Here" << endl;
+                                            myOutput << temp << endl;
+                                            goto level_2;
+                                        }
+                                    }
                                     st.push(temp);
                                 }
                                 else
@@ -81,8 +105,10 @@ void detectError(string S) {
                                     else
                                     {
                                         st.pop();
+                                        st.pop();
                                         flag = 1;
-                                        myOutput << line << "     Error Here" << endl;
+                                        myOutput << "Error Here" << endl;
+                                        myOutput << line << endl;
                                         goto level_2;
                                     }
                                 }
@@ -94,10 +120,13 @@ void detectError(string S) {
                             }
                         }
                     }
-                }level_2: cout << 'h';
+                }
+                level_2: 
+                int x = 0;
+                while( x++ < 1 );
             }
             if (!st.empty())
-                myOutput <<"Error Here" << endl;
+                myOutput << "Error Here" << endl;
 
             myFile.close();
         }
