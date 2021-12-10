@@ -29,7 +29,9 @@ void xml_to_jason(string xml)
     xml_file.open("n1.xml", ios::in);
     string jason = "{\n";
     string indent = "";
-    bool put_comma = false;
+    bool first_inner_tag = true;
+    bool repeated_tag = false;
+    string last_added_tag;
     if (jason_file.is_open())
     {
         if (xml_file.is_open())
@@ -44,15 +46,32 @@ void xml_to_jason(string xml)
                 if(xml_line[i] == '<' && xml_line[i+1] != '/')
                 {
                     get_opening_tag(tags, xml_line, i);
-                    if(i == xml_line.size() - 1) continue;
+                    if(i == xml_line.size() - 1)
+                    {
+                        indent += '\t';
+                        if(tags.top() == last_added_tag) repeated_tag = true;
+                        continue;
+                    }
                     else while(xml_line[++i] != '<') content += xml_line[i];
-                    indent += '\t';
-                    if(!put_comma) jason = jason + indent + '"' + tags.top() + '"' + ": " + '"' + content + '"';
-                    else jason = jason + ",\n" + indent + '"' + tags.top() + '"' + ": " + '"' + content + '"';
-                    put_comma = true;
+                    last_added_tag = tags.top();
+                    if(first_inner_tag)
+                    {
+                        indent += '\t';
+                        jason = jason + indent + '"' + last_added_tag + '"' + ": " + '"' + content + '"';
+                        first_inner_tag = false;
+                    }
+                    else jason = jason + ",\n" + indent + '"' + last_added_tag + '"' + ": " + '"' + content + '"';
                     get_closing_tag(tags, xml_line, ++i);
                 }
-                //else if(xml_line[i] == '<' && xml_line[i+1] != '/') get_closing_tag(tags, xml_line, ++i);
+                else if(xml_line[i] == '<' && xml_line[i+1] == '/')
+                {
+                    if(repeated_tag) jason = ",\n" + jason;
+                    else
+                    {
+                        indent.pop_back();
+                    }
+                    get_closing_tag(tags, xml_line, ++i);
+                }
                 else while(xml_line[i] < xml_line.size()) jason += xml_line[i];
             }
 
