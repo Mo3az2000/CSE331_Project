@@ -6,84 +6,120 @@
 #include <fstream>
 
 using namespace std;
+struct node
+{
+    string name = "";
+    string content = "";
+    int index;
+    int parent_index;
+    vector <int> children_indices;
+};
 
-void get_opening_tag(stack<string> &tags_stack, string &line, int &index)
+string get_tag(string &line, int &index)
 {
     string tag = "";
     while(line[++index] != '>') tag += line[index];
-    tags_stack.push(tag);
+    return tag;
 }
 
-void get_closing_tag(stack<string> &tags_stack, string &line, int &index)
+vector <node> make_tree(string file_name)
 {
-    string tag = "";
-    while(line[++index] != '>') tag += line[index];
-    tags_stack.pop();
-}
-
-void xml_to_jason(string xml)
-{
+    vector <node> tags;
+    string xml_string = "";
     fstream xml_file;
-    fstream jason_file;
-    jason_file.open("Jason.jason", ios::out);
-    xml_file.open("n1.xml", ios::in);
-    string jason = "{\n";
-    string indent = "";
-    bool first_inner_tag = true;
-    bool repeated_tag = false;
-    string last_added_tag;
-    if (jason_file.is_open())
+    stack <int> tags_stack_indices;
+    xml_file.open(file_name, ios::in);
+    if (xml_file.is_open())
     {
-        if (xml_file.is_open())
+        string xml_line;
+        int tag_index = -1;
+        while (getline(xml_file, xml_line))
         {
-            string xml_line;
-            string content = "";
-            stack <string> tags;
-            while (getline(xml_file, xml_line))
+            int i = 0;
+            while(xml_line[i] == ' ' || xml_line[i] == '\t') i++;
+            if(xml_line[i] == '<' && xml_line[i+1] != '/')
+                {
+                    tag_index++;
+                    tags.push_back(node());
+                    tag_index = tags.size() - 1;
+                    tags[tag_index].name = get_tag(xml_line, i);
+                    tags[tag_index].index = tag_index;
+                    if(tag_index != 0)
+                    {
+                        tags[tag_index].parent_index = tags[tags_stack_indices.top()].index;
+                        tags[tags_stack_indices.top()].children_indices.push_back(tag_index);
+                    }
+                    tags_stack_indices.push(tag_index);
+                    i++;
+                }
+            if(xml_line[i] != '<' && i < xml_line.length())
             {
-                int i = 0;
-                while(xml_line[i] == ' ' || xml_line[i] == '\t') i++;
-                if(xml_line[i] == '<' && xml_line[i+1] != '/')
-                {
-                    get_opening_tag(tags, xml_line, i);
-                    if(i == xml_line.size() - 1)
-                    {
-                        indent += '\t';
-                        if(tags.top() == last_added_tag) repeated_tag = true;
-                        continue;
-                    }
-                    else while(xml_line[++i] != '<') content += xml_line[i];
-                    last_added_tag = tags.top();
-                    if(first_inner_tag)
-                    {
-                        indent += '\t';
-                        jason = jason + indent + '"' + last_added_tag + '"' + ": " + '"' + content + '"';
-                        first_inner_tag = false;
-                    }
-                    else jason = jason + ",\n" + indent + '"' + last_added_tag + '"' + ": " + '"' + content + '"';
-                    get_closing_tag(tags, xml_line, ++i);
-                }
-                else if(xml_line[i] == '<' && xml_line[i+1] == '/')
-                {
-                    if(repeated_tag) jason = ",\n" + jason;
-                    else
-                    {
-                        indent.pop_back();
-                    }
-                    get_closing_tag(tags, xml_line, ++i);
-                }
-                else while(xml_line[i] < xml_line.size()) jason += xml_line[i];
+                while(xml_line[i] != '<' && i < xml_line.length()) 
+                tags[tag_index].content += xml_line[i++];
             }
-
-            xml_file.close();
+            if(xml_line[i] == '<' && xml_line[++i] == '/' && i < xml_line.length())
+            {
+                tags_stack_indices.pop();
+                while(xml_line[++i] != '>');
+            }
         }
-        jason_file.close();
+        xml_file.close();
+    }
+    return tags;
+}
+
+void convert_to_json(vector <node> &tags, int index, string indent, string &json)
+{
+    string ind_temp;
+    string tag_name = "";
+    bool same_inner_tags = false;
+    char opening_bracket = '{';
+    char closing_bracket = '}';
+    for(int i = 0; i < tags[index].children_indices.size(); i++)
+    {
+        if(tags[tags[index].children_indices[i]].name == tag_name) same_inner_tags = true;
+        tag_name = tags[tags[index].children_indices[i]].name;
+    }
+    if(same_inner_tags)
+    {
+        opening_bracket = '[';
+        closing_bracket = ']';
+    }
+    json = json + opening_bracket;
+    for(int i = 0; i < tags[index].children_indices.size(); i++)
+    {
+        if(i != 0) json += ',';
+        json = json + '\n' + indent;
+        if(!(same_inner_tags))
+        {
+            json = json + '"' + tags[tags[index].children_indices[i]].name + '"' + ": ";
+        }
+        if(tags[tags[index].children_indices[i]].content != "") json = json + '"' + tags[tags[index].children_indices[i]].content + '"' ;
+        else convert_to_json(tags, tags[index].children_indices[i], indent + "\t", json);
+    }
+    ind_temp = indent;
+    ind_temp.pop_back();
+    json = json + '\n' + ind_temp + closing_bracket;
+}
+
+void xml_to_json(string xml)
+{
+    fstream json_file;
+    json_file.open("Json.json", ios::out);
+    vector <node> tags;
+    string json = "\t";
+    tags = make_tree(xml);
+    if (json_file.is_open())
+    {
+        convert_to_json(tags, 0, "\t\t", json);
+        json_file << "{\n\t" << '"' << tags[0].name << '"' << ": " << '\n' << json << "\n}" << endl;
+        json_file.close();
     }
 }
 
 int main()
 {
-    string file_name;
-    xml_to_jason(file_name);
+    string file_name = "fileWithSpaces.xml";
+    xml_to_json(file_name);
     return 0;
 }
