@@ -19,7 +19,6 @@ string get_tag(string &line, int &index)
 vector <node> make_tree(string file_name)
 {
     vector <node> tags;
-    string xml_string = "";
     fstream xml_file;
     stack <int> tags_stack_indices;
     xml_file.open(file_name, ios::in);
