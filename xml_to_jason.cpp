@@ -6,7 +6,6 @@ struct node
     string name = "";
     string content = "";
     int index;
-    int parent_index;
     vector <int> children_indices;
 };
 
@@ -41,7 +40,6 @@ vector <node> make_tree(string file_name)
                     tags[tag_index].index = tag_index;
                     if(tag_index != 0)
                     {
-                        tags[tag_index].parent_index = tags[tags_stack_indices.top()].index;
                         tags[tags_stack_indices.top()].children_indices.push_back(tag_index);
                     }
                     tags_stack_indices.push(tag_index);
