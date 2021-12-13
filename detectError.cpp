@@ -18,6 +18,7 @@ bool isOpenTag(string S)
     return false;
 }
 
+
 string generateCloseTag(string S) 
 {
     string a = "<";
@@ -30,6 +31,8 @@ void detectError(string S)
 {
     stack < string > st;
     string temp;
+    int stringFlag = 1;
+    int dontStackFlag = 0;
     fstream myFile;
     fstream myOutput;
     string line;
@@ -44,13 +47,20 @@ void detectError(string S)
                 int flag = 0;
                 for (int i = 0; i < line.length(); i++) 
                 {
+                    stringFlag = 1;
                     if (line[i] == '<') 
                     {
+                        stringFlag = 0;
                         for (int j = i; j < line.length(); j++) 
                         {
                             if (line[j] == '>') 
                             {
                                 temp = line.substr(i, j - i + 1);
+                                // if (dontStackFlag)
+                                // {
+                                //     dontStackFlag = 0;
+                                    
+                                // }
                                 if (isText(line[j + 1])) 
                                 {
                                     if(line.back() != '>')
@@ -104,22 +114,39 @@ void detectError(string S)
                                     }
                                     else
                                     {
-                                        st.pop();
-                                        st.pop();
-                                        flag = 1;
+                                        while(true)
+                                        {
                                         myOutput << "Error Here" << endl;
+                                        st.pop();
+                                        string top = st.top();
+                                        string closedTop = generateCloseTag(top);
+                                        if (closedTop == temp)
+                                        {
+                                            st.pop();
+                                            break;
+                                        }
+                                        }
+                                        flag = 1;
                                         myOutput << line << endl;
                                         goto level_2;
                                     }
                                 }
-                                if (flag == 0)
+                                if (!flag)
+                                {
                                     myOutput << line << endl;
                                     goto level_2;
-                                
+                                }
                                 break;
                             }
                         }
                     }
+                }
+                if (stringFlag)
+                {
+                    stringFlag = 0;
+                    dontStackFlag = 1;
+                    myOutput << line << endl;
+                    goto level_2;
                 }
                 level_2: 
                 int x = 0;
