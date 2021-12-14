@@ -74,14 +74,8 @@ Node *Tree;
 //Params:
     //node:Head node of a tree.
     //str: an empty string that would be used in the recursion process to build up the codeword.
-
-bool isLeaf(Node* root) {
-    return root->left == nullptr && root->right == nullptr;
-}
-
 void traverse_huff(Node *node,string str)
 {
-
     if (node->character == '\0')
     {
         //cout<<node->character<<"\n";
@@ -93,26 +87,9 @@ void traverse_huff(Node *node,string str)
     //cout<<node->character<<" => "<<str<<"\n";
     HuffmanDict[node->character] = str;
     return;
-
-}
-
-
-
-//Converts binary string of one Byte
-unsigned char bin_to_dec(string const &n)
-{
-    unsigned int result = 0;
-    for (auto it = n.begin(); it != n.end(); ++it)
-    {
-        result <<= 1;
-        if (*it == '1') result |= 1;
-    }
-    return result;
 }
 
 //Converts a string of bits to an array of bytes
-
-
 vector<unsigned char> bitstring_to_bytes(string s)
 {
     long long size = s.length();
@@ -143,35 +120,18 @@ vector<unsigned char> bitstring_to_bytes(string s)
     return arrayOfByte;
 }
 
-
-
 //params:
 //b: 1 byte integer
 //Returns a string of 8 bits
-
 string one_byte_to_bitstring(unsigned char byte)
 {
     string binary = bitset<8>(byte).to_string();
     return binary;
 }
 
-
 //params:
 //byteArr: array of integers each is 1 byte
-//Returns a string of bits
-string bytes_to_bitstring(vector<unsigned int> &byteArr)
-{
-    string bin_string="";
-    long long size = byteArr.size();
-    for(long long i = 0; i < size;i++)
-    {
-        bin_string = bin_string + ( bitset<32>(byteArr[i]).to_string() );
-    }
-    return bin_string;
-}
-
-
-//Function to push each character in an array of characters (Will not be used)
+//Function to push each character in an array of characters
 long long string_to_byteArr(string file_string , vector<unsigned char> &fileByteArr)
 {
     long long Num_of_Bytes = file_string.length();
@@ -181,39 +141,6 @@ long long string_to_byteArr(string file_string , vector<unsigned char> &fileByte
         fileByteArr.push_back(file_string[i]);
     }
     return Num_of_Bytes;
-}
-
-
-//Function to convert the binary of each 4 characters (32 bit) to an integer and store it in the vector
-void string_to_intArr(string file_string , vector<unsigned int> &fileByteArr)
-{
-    long long Num_of_Bytes = file_string.length();
-    fileByteArr.reserve((Num_of_Bytes/4)+1);
-    long long index = 0;
-    int remaining_chars = Num_of_Bytes%4;
-    for(long long index=0;index<Num_of_Bytes-remaining_chars;index=index+4)
-    {
-        string four_characters=file_string.substr(index,index+4);
-        string bin_string="";
-        for(int j=0;j<4;j++)
-        {
-            bin_string=bin_string+one_byte_to_bitstring(four_characters[j]);
-        }
-        int integer = stoi(bin_string, 0, 2);
-        fileByteArr.push_back(integer);
-    }
-    if(remaining_chars > 0)
-    {
-        string missed_char_str=file_string.substr(index+4,index+4+remaining_chars);
-        string bin_string="";
-        for(int j=0;j<remaining_chars;j++)
-        {
-            bin_string=bin_string+one_byte_to_bitstring(missed_char_str[j]);
-        }
-        int integer = stoi(bin_string, 0, 2);
-        fileByteArr.push_back(integer);
-    }
-    return;
 }
 
 string eraseSpacing(string inputFile){
@@ -259,17 +186,8 @@ string read_huff_file(string huff_file){
 /*****************************************************************************************************/
 
 //MAIN:
-
-struct dec_info {
-    Node* tree;
-    string nbs;
-};
-
-typedef struct dec_info Struct;
-
-Struct PrintCompressedTree(string file_string)
+Node * PrintCompressedTree(string file_string)
 {
-	Struct s;
     long long fileByteArr_Size = file_string.length();
 
     //Construct frequencies dictionary
@@ -320,8 +238,6 @@ Struct PrintCompressedTree(string file_string)
     }
     Tree = q.top();
 
-    s.tree = Tree;
-
     //Set huffman codes for each symbol(leaf) in the huffman tree.
     traverse_huff(Tree,"");
 
@@ -347,7 +263,6 @@ Struct PrintCompressedTree(string file_string)
     //So we add one byte at the beginning of the string to indicate the number of redundant bits in the last Byte.
 
     //Calculating the number of bits of the encoded string before adding redundant bits.
-    s.nbs = outStr;
     long long encodedStringLen = outStr.length();
 
     //Calculating the number of redundant bits in the last byte.
@@ -380,33 +295,10 @@ Struct PrintCompressedTree(string file_string)
             encodedFile << outByteArr[i];
         }
     }
-    return s;
+    return Tree;
 }
 
-string decode_file_1(struct Node* Tree, string s)
-	{
-        string ans = "";
-        struct Node* curr = Tree;
-        int ssize = s.size();
-        for (int i=0;i<ssize;i++)
-        {
-            if (s[i] == '0')
-               curr = curr->left;
-            else
-               curr = curr->right;
-
-            // reached leaf node
-            if (curr->left==NULL and curr->right==NULL)
-            {
-                ans += curr->character;
-                curr = Tree;
-            }
-        }
-        // cout<<ans<<endl;
-        return ans+'\0';
-    }
-
-string decode_file_2(struct Node* Tree, string ffs)
+string decode_file(struct Node* Tree, string ffs)
 	{
 		vector<unsigned char> fileByteArray;
 		long long num_of_bytes = string_to_byteArr(ffs , fileByteArray);
@@ -440,11 +332,10 @@ string decode_file_2(struct Node* Tree, string ffs)
 
 int main(){
 	string file_string = eraseSpacing("sample.xml");
-	Struct info;
-	info = PrintCompressedTree(file_string);
+	Node * tree = PrintCompressedTree(file_string);
 	string st = read_huff_file("encodedFile.huff");
 	cout << st << endl;
-	cout << decode_file_1(info.tree, info.nbs) << endl;
-	cout << decode_file_2(info.tree, st);
+  cout << file_string << endl;
+	cout << decode_file(tree, st);
 	return 0;
 }
