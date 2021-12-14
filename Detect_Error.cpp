@@ -31,6 +31,7 @@ void detectError(string S)
 {
     stack < string > st;
     string temp;
+    string top3;
     int stringFlag = 1;
     int dontStackFlag = 0;
     fstream myFile;
@@ -152,8 +153,12 @@ void detectError(string S)
                 int x = 0;
                 while( x++ < 1 );
             }
-            if (!st.empty())
+            while (!st.empty())
+            {
+                top3 = st.top();
                 myOutput << "Error Here" << endl;
+                st.pop();
+            }
 
             myFile.close();
         }
