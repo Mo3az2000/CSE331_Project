@@ -41,14 +41,14 @@ string formatting(string s)
                 i++;
             }
 
-            while ((x[0] == ' ') || (x[0] == '\t'))
+            while ((x[0] == ' ') || (x[0] == '\t') || (x[0] == '\n'))
             {
                 x.erase(0, 1);
             }
             int ns = x.size() - 1;
             if (ns > 0)
             {
-                while ((x[ns] == ' ') || (x[ns] == '\t'))
+                while ((x[ns] == ' ') || (x[ns] == '\t')|| (x[0] == '\n'))
                 {
                     x.erase(ns, 1);
                     ns = x.size() - 1;

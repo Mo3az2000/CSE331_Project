@@ -21,6 +21,12 @@ private slots:
 
     void on_prettifyButton_clicked();
 
+    void on_decButton_clicked();
+
+    void on_incButton_clicked();
+
+    void on_jsonButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

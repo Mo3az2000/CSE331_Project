@@ -12,7 +12,6 @@
   </property>
   <property name="font">
    <font>
-    <family>Courier New</family>
     <pointsize>14</pointsize>
     <bold>true</bold>
    </font>
@@ -42,21 +41,28 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="fixButton">
         <property name="text">
-         <string>Button 3</string>
+         <string>Fix Errors</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_5">
+       <widget class="QPushButton" name="jsonButton">
+        <property name="text">
+         <string>→ JSON</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="decButton">
         <property name="text">
          <string>-</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_4">
+       <widget class="QPushButton" name="incButton">
         <property name="text">
          <string>+</string>
         </property>
@@ -68,7 +74,6 @@
      <widget class="QLabel" name="labelFileName">
       <property name="font">
        <font>
-        <family>Courier New</family>
         <pointsize>8</pointsize>
         <bold>true</bold>
        </font>
@@ -84,7 +89,6 @@
        <widget class="QTextEdit" name="textEdit">
         <property name="font">
          <font>
-          <family>Courier New</family>
           <pointsize>12</pointsize>
           <bold>true</bold>
          </font>
@@ -95,7 +99,6 @@
        <widget class="QTextEdit" name="textEdit_2">
         <property name="font">
          <font>
-          <family>Courier New</family>
           <pointsize>12</pointsize>
           <bold>true</bold>
          </font>
@@ -118,7 +121,7 @@
      <x>0</x>
      <y>0</y>
      <width>829</width>
-     <height>33</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>

@@ -12,7 +12,8 @@ SOURCES += \
     filetoString.hpp \
     formatting.hpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    xmlToJason.hpp
 
 HEADERS += \
     ../../../my/New folder/fotmatting.hpp \
