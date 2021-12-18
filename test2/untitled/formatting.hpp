@@ -48,7 +48,7 @@ string formatting(string s)
             int ns = x.size() - 1;
             if (ns > 0)
             {
-                while ((x[ns] == ' ') || (x[ns] == '\t')|| (x[0] == '\n'))
+                while ((x[ns] == ' ') || (x[ns] == '\t')|| (x[ns] == '\n'))
                 {
                     x.erase(ns, 1);
                     ns = x.size() - 1;

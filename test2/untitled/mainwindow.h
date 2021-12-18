@@ -27,6 +27,10 @@ private slots:
 
     void on_jsonButton_clicked();
 
+    void on_compressButton_clicked();
+
+    void on_decompressButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

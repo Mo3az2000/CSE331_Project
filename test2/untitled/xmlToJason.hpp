@@ -99,10 +99,11 @@ void convert_to_json(vector <node> &tags, int index, string indent, string &json
     json = json + '\n' + ind_temp + closing_bracket;
 }
 
-void xml_to_json(string xml)
+void xml_to_json(string xml, string path)
 {
     fstream json_file;
-    json_file.open("Json.json", ios::out);
+    string jsonName = path + "Json.json";
+    json_file.open(jsonName, ios::out);
     vector <node> tags;
     string json = "\t";
     tags = make_tree(xml);
