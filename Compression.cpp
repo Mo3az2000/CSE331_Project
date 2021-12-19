@@ -74,7 +74,7 @@ Node *Tree;
 //Params:
     //node:Head node of a tree.
     //str: an empty string that would be used in the recursion process to build up the codeword.
-void traverse_huff(Node *node,string str)
+void traverse_huff(Node *node,string str)  // O(n), O(1)
 {
     if (node->character == '\0')
     {
@@ -87,10 +87,10 @@ void traverse_huff(Node *node,string str)
     //cout<<node->character<<" => "<<str<<"\n";
     HuffmanDict[node->character] = str;
     return;
-}
+} 
 
 //Converts a string of bits to an array of bytes
-vector<unsigned char> bitstring_to_bytes(string s)
+vector<unsigned char> bitstring_to_bytes(string s) //O(n), O(n)
 {
     long long size = s.length();
     vector<unsigned char> arrayOfByte(size/8);
@@ -123,7 +123,7 @@ vector<unsigned char> bitstring_to_bytes(string s)
 //params:
 //b: 1 byte integer
 //Returns a string of 8 bits
-string one_byte_to_bitstring(unsigned char byte)
+string one_byte_to_bitstring(unsigned char byte) //O(1), O(1)
 {
     string binary = bitset<8>(byte).to_string();
     return binary;
@@ -132,7 +132,7 @@ string one_byte_to_bitstring(unsigned char byte)
 //params:
 //byteArr: array of integers each is 1 byte
 //Function to push each character in an array of characters
-long long string_to_byteArr(string file_string , vector<unsigned char> &fileByteArr)
+long long string_to_byteArr(string file_string , vector<unsigned char> &fileByteArr) //O(n), O(n), n: no. of chars
 {
     long long Num_of_Bytes = file_string.length();
     fileByteArr.reserve(Num_of_Bytes);
@@ -143,7 +143,7 @@ long long string_to_byteArr(string file_string , vector<unsigned char> &fileByte
     return Num_of_Bytes;
 }
 
-string eraseSpacing(string inputFile){
+string eraseSpacing(string inputFile){ //O(n), O(1)  //best: O(m), o(1),  n: no. of chars, m: no. of lines
     fstream myInput;
     string ns;
     myInput.open(inputFile, ios::in);
@@ -168,7 +168,7 @@ string eraseSpacing(string inputFile){
     return ns;
 }
 
-string read_huff_file(string huff_file){
+string read_huff_file(string huff_file){ // O(n), O(1), n: no. of lines
 	string st;
 	fstream huff;
 		huff.open(huff_file, ios::in);
@@ -186,7 +186,7 @@ string read_huff_file(string huff_file){
 /*****************************************************************************************************/
 
 //MAIN:
-Node * PrintCompressedTree(string file_string)
+Node * PrintCompressedTree(string file_string)         //O(n), O(1), n: no. of chars in input string
 {
     long long fileByteArr_Size = file_string.length();
 
@@ -298,16 +298,16 @@ Node * PrintCompressedTree(string file_string)
     return Tree;
 }
 
-string decode_file(struct Node* Tree, string ffs)
-	{
-		vector<unsigned char> fileByteArray;
-		long long num_of_bytes = string_to_byteArr(ffs , fileByteArray);
-		string fs;
-		for(auto element : fileByteArray) fs += one_byte_to_bitstring(element);
-		string sub = fs.substr(0,7);
-		unsigned int num_of_added_zeros = stoi(sub, 0, 2);
-		int size = fs.size() - num_of_added_zeros - 8;
-		string s = fs.substr(8, size);
+string decode_file(Node* Tree, string ffs)   // O(n), O(1), n: no. of chars
+{
+	vector<unsigned char> fileByteArray;
+	long long num_of_bytes = string_to_byteArr(ffs , fileByteArray);
+	string fs;
+	for(auto element : fileByteArray) fs += one_byte_to_bitstring(element);
+	string sub = fs.substr(0,7);
+	unsigned int num_of_added_zeros = stoi(sub, 0, 2);
+	int size = fs.size() - num_of_added_zeros - 8;
+	string s = fs.substr(8, size);
         string ans = "";
         struct Node* curr = Tree;
         int ssize = s.size();
@@ -327,7 +327,7 @@ string decode_file(struct Node* Tree, string ffs)
         }
         // cout<<ans<<endl;
         return ans+'\0';
-    }
+}
 
 
 int main(){
@@ -335,7 +335,7 @@ int main(){
 	Node * tree = PrintCompressedTree(file_string);
 	string st = read_huff_file("encodedFile.huff");
 	cout << st << endl;
-  cout << file_string << endl;
+        cout << file_string << endl;
 	cout << decode_file(tree, st);
 	return 0;
 }
