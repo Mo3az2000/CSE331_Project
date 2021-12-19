@@ -18,7 +18,6 @@ bool isOpenTag(string S)
     return false;
 }
 
-
 string generateCloseTag(string S) 
 {
     string a = "<";
@@ -36,9 +35,9 @@ void correctError(string S)
     int dontStackFlag = 0;
     fstream myFile;
     fstream myOutput;
-    string line;
+    string line, line2;
     myFile.open(S, ios:: in ); //read only
-    myOutput.open("output.txt", ios::out); // write only
+    myOutput.open("output.xml", ios::out); // write only
     if (myOutput.is_open()) 
     {
         if (myFile.is_open()) 
@@ -48,7 +47,10 @@ void correctError(string S)
                 int flag = 0;
                 for (int i = 0; i < line.length(); i++) 
                 {
-                    stringFlag = 1;
+                    if (line[i] != ' ')
+                    {
+                        stringFlag = 1;
+                    }
                     if (line[i] == '<') 
                     {
                         stringFlag = 0;
@@ -57,11 +59,14 @@ void correctError(string S)
                             if (line[j] == '>') 
                             {
                                 temp = line.substr(i, j - i + 1);
-                                // if (dontStackFlag)
-                                // {
-                                //     dontStackFlag = 0;
-                                    
-                                // }
+                                if (dontStackFlag)
+                                {
+                                    dontStackFlag = 0;
+                                    flag = 1;
+                                    myOutput << generateCloseTag(st.top()) << endl;
+                                    st.pop();
+                                    goto level_2;
+                                }
                                 if (isText(line[j + 1])) 
                                 {
                                     if(line.back() != '>')
