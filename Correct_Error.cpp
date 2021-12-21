@@ -26,8 +26,23 @@ string generateCloseTag(string S)
     return closedTop;
 }
 
+string generateOpenTag(string S) 
+{
+    string a = "<";
+    string openTag = a + S.substr(2);
+    return openTag;
+}
+
+bool isTopUsers (string top)
+{
+    top == "<users>" ? 1:0;
+    return 1;
+}
+
 void correctError(string S) 
 {
+    int lineCount = 0;
+    int userFlag = 1;
     stack < string > st;
     string temp;
     string top3;
@@ -44,13 +59,29 @@ void correctError(string S)
         {
             while (getline(myFile, line)) 
             {
+                lineCount++;
+                if (lineCount == 1)
+                {
+                    myOutput << "<users>" << endl;
+                    myOutput << "<users>" << endl;
+                    st.push("<users>");
+                    continue;
+                }
                 int flag = 0;
                 for (int i = 0; i < line.length(); i++) 
                 {
+                    // if (lineCount == 2 && userFlag)
+                    // {
+                    //     if(isTopUsers)
+                    //     {
+                    //         userFlag = 0;
+                    //         myOutput << "    <user>" << endl;
+                    //         st.push("<user>");
+                    //     }
+                    // }
                     if (line[i] != ' ')
-                    {
                         stringFlag = 1;
-                    }
+
                     if (line[i] == '<') 
                     {
                         stringFlag = 0;
@@ -106,10 +137,11 @@ void correctError(string S)
                                 }
                                 else
                                 {
-                                    if (st.empty())
+                                    if (st.empty()) // if closetag and empty stack
                                     {
                                         flag = 1;
-                                        myOutput << line << "Fatal Error" << endl;
+                                        myOutput << generateOpenTag(temp) << endl;
+                                        myOutput << line << endl;
                                         goto level_2;
                                     }
                                     string top = st.top();
@@ -124,6 +156,13 @@ void correctError(string S)
                                         {
                                         myOutput << closedTop << endl;
                                         st.pop();
+                                        if (st.empty())
+                                        {
+                                            flag = 1;
+                                            myOutput << generateOpenTag(temp) << endl;
+                                            myOutput << line << endl;
+                                            goto level_2;
+                                        }
                                         top = st.top();
                                         closedTop = generateCloseTag(top);
                                         if (closedTop == temp)
@@ -164,6 +203,7 @@ void correctError(string S)
                 myOutput << generateCloseTag(top3) << endl;
                 st.pop();
             }
+            myOutput << "</users>" << endl;
             myFile.close();
         }
         myOutput.close();
