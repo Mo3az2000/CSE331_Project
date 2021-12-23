@@ -4,18 +4,12 @@ using namespace std;
 
 bool isText(char S) 
 {
-    if (S == '<' || S=='\000') 
-        return false;
-
-    return true;
+    return (S == '<' || S=='\000' || S==' ')? 0:1;
 }
 
 bool isOpenTag(string S) 
 {
-    if (S[1] != '/') 
-        return true;
-
-    return false;
+    return (S[1] != '/')? 1:0;
 }
 
 string generateCloseTag(string S) 
@@ -33,21 +27,14 @@ string generateOpenTag(string S)
     return openTag;
 }
 
-bool isTopUsers (string top)
-{
-    top == "<users>" ? 1:0;
-    return 1;
-}
-
 void correctError(string S) 
 {
     int lineCount = 0;
     int userFlag = 1;
     stack < string > st;
-    string temp;
+    string temp, temp2;
     string top3;
     int stringFlag = 1;
-    int dontStackFlag = 0;
     fstream myFile;
     fstream myOutput;
     string line, line2;
@@ -63,22 +50,13 @@ void correctError(string S)
                 if (lineCount == 1)
                 {
                     myOutput << "<users>" << endl;
-                    myOutput << "<users>" << endl;
-                    st.push("<users>");
+                    myOutput << line << endl;
+                    st.push(line);
                     continue;
                 }
                 int flag = 0;
                 for (int i = 0; i < line.length(); i++) 
                 {
-                    // if (lineCount == 2 && userFlag)
-                    // {
-                    //     if(isTopUsers)
-                    //     {
-                    //         userFlag = 0;
-                    //         myOutput << "    <user>" << endl;
-                    //         st.push("<user>");
-                    //     }
-                    // }
                     if (line[i] != ' ')
                         stringFlag = 1;
 
@@ -90,14 +68,6 @@ void correctError(string S)
                             if (line[j] == '>') 
                             {
                                 temp = line.substr(i, j - i + 1);
-                                if (dontStackFlag)
-                                {
-                                    dontStackFlag = 0;
-                                    flag = 1;
-                                    myOutput << generateCloseTag(st.top()) << endl;
-                                    st.pop();
-                                    goto level_2;
-                                }
                                 if (isText(line[j + 1])) 
                                 {
                                     if(line.back() != '>')
@@ -154,6 +124,12 @@ void correctError(string S)
                                     {
                                         while(true)
                                         {
+                                        if (isText(line[i-1]))
+                                        {
+                                            myOutput << generateOpenTag(temp) << endl;
+                                            myOutput << line << endl;
+                                            goto level_2;
+                                        }
                                         myOutput << closedTop << endl;
                                         st.pop();
                                         if (st.empty())
@@ -189,13 +165,11 @@ void correctError(string S)
                 if (stringFlag)
                 {
                     stringFlag = 0;
-                    dontStackFlag = 1;
                     myOutput << line << endl;
                     goto level_2;
                 }
                 level_2: 
                 int x = 0;
-                while( x++ < 1 );
             }
             while (!st.empty())
             {
