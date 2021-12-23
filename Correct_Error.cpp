@@ -112,6 +112,9 @@ vector<string> correctError(string S)
                                             flag = 1;
                                             myOutput << generateCloseTag(temp) << endl;
                                             myOutput << temp << endl;
+                                            char s[5];
+                                            string error = temp +" is missing its closing tag in line " + itoa(lineCount-1,s,10);
+                                            errors.push_back(error);
                                             goto level_2;
                                         }
                                     }
