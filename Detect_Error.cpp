@@ -18,7 +18,6 @@ bool isOpenTag(string S)
     return false;
 }
 
-
 string generateCloseTag(string S) 
 {
     string a = "<";
