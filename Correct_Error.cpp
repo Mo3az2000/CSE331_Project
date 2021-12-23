@@ -27,6 +27,17 @@ string generateOpenTag(string S)
     return openTag;
 }
 
+bool foundInStack (stack<string> source, string value)
+{
+    while (!source.empty() && source.top() != value)
+        source.pop();
+
+    if (!source.empty())
+         return true;
+
+    return false;
+}
+
 void correctError(string S) 
 {
     int lineCount = 0;
@@ -130,26 +141,34 @@ void correctError(string S)
                                             myOutput << line << endl;
                                             goto level_2;
                                         }
-                                        myOutput << closedTop << endl;
-                                        st.pop();
-                                        if (st.empty())
+                                        if(foundInStack(st,generateOpenTag(temp))) //if closetag is missing
                                         {
-                                            flag = 1;
+                                            myOutput << closedTop << endl;
+                                            st.pop();
+                                            if (st.empty())
+                                            {
+                                                flag = 1;
+                                                myOutput << generateOpenTag(temp) << endl;
+                                                myOutput << line << endl;
+                                                goto level_2;
+                                            }
+                                            top = st.top();
+                                            closedTop = generateCloseTag(top);
+                                            if (closedTop == temp)
+                                            {
+                                                st.pop();
+                                                break;
+                                            }
+                                            myOutput << line << endl;
+                                            goto level_2;
+                                        }
+                                        else
+                                        {
                                             myOutput << generateOpenTag(temp) << endl;
                                             myOutput << line << endl;
                                             goto level_2;
                                         }
-                                        top = st.top();
-                                        closedTop = generateCloseTag(top);
-                                        if (closedTop == temp)
-                                        {
-                                            st.pop();
-                                            break;
-                                        }
-                                        }
-                                        flag = 1;
-                                        myOutput << line << endl;
-                                        goto level_2;
+                                    }
                                     }
                                 }
                                 if (!flag)
