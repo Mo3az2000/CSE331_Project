@@ -31,6 +31,11 @@ private slots:
 
     void on_decompressButton_clicked();
 
+    void on_fixButton_clicked();
+
+
+    void on_saveButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

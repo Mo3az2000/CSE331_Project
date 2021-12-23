@@ -31,9 +31,13 @@ public:
     QHBoxLayout *horizontalLayout;
     QPushButton *openFileButton;
     QPushButton *prettifyButton;
-    QPushButton *pushButton;
-    QPushButton *pushButton_5;
-    QPushButton *pushButton_4;
+    QPushButton *fixButton;
+    QPushButton *compressButton;
+    QPushButton *decompressButton;
+    QPushButton *jsonButton;
+    QPushButton *saveButton;
+    QPushButton *decButton;
+    QPushButton *incButton;
     QLabel *labelFileName;
     QHBoxLayout *horizontalLayout_2;
     QTextEdit *textEdit;
@@ -45,12 +49,46 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(829, 627);
+        MainWindow->resize(1094, 627);
         QFont font;
-        font.setFamilies({QString::fromUtf8("Courier New")});
         font.setPointSize(14);
-        font.setBold(true);
+        font.setBold(false);
         MainWindow->setFont(font);
+        MainWindow->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"border-radius: 25px;\n"
+"padding: 0 8px;\n"
+"background:#333333;\n"
+"font: 700 12pt \"Consolas\";\n"
+"height: 50px;\n"
+"color: white;\n"
+"}\n"
+"QPushButton:hover {\n"
+"border:2px solid;	\n"
+"border-color: rgb(86, 156, 214);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"         \n"
+"	background-color: rgb(55, 55, 61);\n"
+"}\n"
+"QMainWindow{\n"
+"background:#252526\n"
+"}\n"
+"QLabel{\n"
+"color:#6a9955;\n"
+"}\n"
+"QTextEdit{\n"
+"background:#1e1e1e;\n"
+"color:#d4d4d4;\n"
+"}\n"
+"QMessageBox{\n"
+"font: 700 15pt \"Courier\";\n"
+"background:#252526;\n"
+"color:#6a9955;\n"
+"width:1200px;\n"
+"}\n"
+"\n"
+""));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -68,20 +106,46 @@ public:
 
         horizontalLayout->addWidget(prettifyButton);
 
-        pushButton = new QPushButton(centralwidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        fixButton = new QPushButton(centralwidget);
+        fixButton->setObjectName(QString::fromUtf8("fixButton"));
 
-        horizontalLayout->addWidget(pushButton);
+        horizontalLayout->addWidget(fixButton);
 
-        pushButton_5 = new QPushButton(centralwidget);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+        compressButton = new QPushButton(centralwidget);
+        compressButton->setObjectName(QString::fromUtf8("compressButton"));
 
-        horizontalLayout->addWidget(pushButton_5);
+        horizontalLayout->addWidget(compressButton);
 
-        pushButton_4 = new QPushButton(centralwidget);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        decompressButton = new QPushButton(centralwidget);
+        decompressButton->setObjectName(QString::fromUtf8("decompressButton"));
 
-        horizontalLayout->addWidget(pushButton_4);
+        horizontalLayout->addWidget(decompressButton);
+
+        jsonButton = new QPushButton(centralwidget);
+        jsonButton->setObjectName(QString::fromUtf8("jsonButton"));
+
+        horizontalLayout->addWidget(jsonButton);
+
+        saveButton = new QPushButton(centralwidget);
+        saveButton->setObjectName(QString::fromUtf8("saveButton"));
+
+        horizontalLayout->addWidget(saveButton);
+
+        decButton = new QPushButton(centralwidget);
+        decButton->setObjectName(QString::fromUtf8("decButton"));
+        decButton->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 700 8pt \"Courier New\";\n"
+"}"));
+
+        horizontalLayout->addWidget(decButton);
+
+        incButton = new QPushButton(centralwidget);
+        incButton->setObjectName(QString::fromUtf8("incButton"));
+        incButton->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	font: 700 16pt \"Courier New\";\n"
+"}"));
+
+        horizontalLayout->addWidget(incButton);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -89,10 +153,10 @@ public:
         labelFileName = new QLabel(centralwidget);
         labelFileName->setObjectName(QString::fromUtf8("labelFileName"));
         QFont font1;
-        font1.setFamilies({QString::fromUtf8("Courier New")});
         font1.setPointSize(8);
         font1.setBold(true);
         labelFileName->setFont(font1);
+        labelFileName->setStyleSheet(QString::fromUtf8(""));
 
         verticalLayout->addWidget(labelFileName);
 
@@ -101,7 +165,6 @@ public:
         textEdit = new QTextEdit(centralwidget);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
         QFont font2;
-        font2.setFamilies({QString::fromUtf8("Courier New")});
         font2.setPointSize(12);
         font2.setBold(true);
         textEdit->setFont(font2);
@@ -122,7 +185,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 829, 33));
+        menubar->setGeometry(QRect(0, 0, 1094, 26));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -138,9 +201,13 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Text Editor", nullptr));
         openFileButton->setText(QCoreApplication::translate("MainWindow", "Open File", nullptr));
         prettifyButton->setText(QCoreApplication::translate("MainWindow", "Prettify", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "Button 3", nullptr));
-        pushButton_5->setText(QCoreApplication::translate("MainWindow", "-", nullptr));
-        pushButton_4->setText(QCoreApplication::translate("MainWindow", "+", nullptr));
+        fixButton->setText(QCoreApplication::translate("MainWindow", "Fix Errors", nullptr));
+        compressButton->setText(QCoreApplication::translate("MainWindow", "Compress", nullptr));
+        decompressButton->setText(QCoreApplication::translate("MainWindow", "Decompress", nullptr));
+        jsonButton->setText(QCoreApplication::translate("MainWindow", "\342\206\222 JSON", nullptr));
+        saveButton->setText(QCoreApplication::translate("MainWindow", "Save Output", nullptr));
+        decButton->setText(QCoreApplication::translate("MainWindow", "Aa", nullptr));
+        incButton->setText(QCoreApplication::translate("MainWindow", "Aa", nullptr));
         labelFileName->setText(QCoreApplication::translate("MainWindow", "No File Opened", nullptr));
     } // retranslateUi
 

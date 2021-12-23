@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>829</width>
+    <width>1094</width>
     <height>627</height>
    </rect>
   </property>
@@ -28,6 +28,15 @@ font: 700 12pt &quot;Consolas&quot;;
 height: 50px;
 color: white;
 }
+QPushButton:hover {
+border:2px solid;	
+border-color: rgb(86, 156, 214);
+}
+
+QPushButton:pressed {
+         
+	background-color: rgb(55, 55, 61);
+}
 QMainWindow{
 background:#252526
 }
@@ -38,6 +47,13 @@ QTextEdit{
 background:#1e1e1e;
 color:#d4d4d4;
 }
+QMessageBox{
+font: 700 15pt &quot;Courier&quot;;
+background:#252526;
+color:#6a9955;
+width:1200px;
+}
+
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -90,19 +106,33 @@ color:#d4d4d4;
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="saveButton">
+        <property name="text">
+         <string>Save Output</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="decButton">
         <property name="styleSheet">
-         <string notr="true"/>
+         <string notr="true">QPushButton {
+	font: 700 8pt &quot;Courier New&quot;;
+}</string>
         </property>
         <property name="text">
-         <string>-</string>
+         <string>Aa</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="incButton">
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	font: 700 16pt &quot;Courier New&quot;;
+}</string>
+        </property>
         <property name="text">
-         <string>+</string>
+         <string>Aa</string>
         </property>
        </widget>
       </item>
@@ -161,7 +191,7 @@ color:#d4d4d4;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>829</width>
+     <width>1094</width>
      <height>26</height>
     </rect>
    </property>
