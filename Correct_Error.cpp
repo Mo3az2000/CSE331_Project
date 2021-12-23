@@ -32,13 +32,10 @@ bool foundInStack (stack<string> source, string value)
     while (!source.empty() && source.top() != value)
         source.pop();
 
-    if (!source.empty())
-         return true;
-
-    return false;
+    return (!source.empty())? 1:0;
 }
 
-void correctError(string S) 
+vector<string> correctError(string S) 
 {
     int lineCount = 0;
     int userFlag = 1;
@@ -49,6 +46,7 @@ void correctError(string S)
     fstream myFile;
     fstream myOutput;
     string line, line2;
+    vector<string> errors;
     myFile.open(S, ios:: in ); //read only
     myOutput.open("output.xml", ios::out); // write only
     if (myOutput.is_open()) 
@@ -83,6 +81,9 @@ void correctError(string S)
                                 {
                                     if(line.back() != '>')
                                     {
+                                        char s[5];
+                                        string error = temp +" is missing its closing tag in line " + itoa(lineCount,s,10);
+                                        errors.push_back(error);
                                         flag = 1;
                                         myOutput << line << generateCloseTag(temp) << endl;
                                         goto level_2;
@@ -135,40 +136,48 @@ void correctError(string S)
                                     {
                                         while(true)
                                         {
-                                        if (isText(line[i-1]))
-                                        {
-                                            myOutput << generateOpenTag(temp) << endl;
-                                            myOutput << line << endl;
-                                            goto level_2;
-                                        }
-                                        if(foundInStack(st,generateOpenTag(temp))) //if closetag is missing
-                                        {
-                                            myOutput << closedTop << endl;
-                                            st.pop();
-                                            if (st.empty())
+                                            if (isText(line[i-1]))
                                             {
-                                                flag = 1;
+                                                char s[5];
+                                                string error = temp +" is missing its opening tag in line " + itoa(lineCount,s,10);
+                                                errors.push_back(error);
                                                 myOutput << generateOpenTag(temp) << endl;
                                                 myOutput << line << endl;
                                                 goto level_2;
                                             }
-                                            top = st.top();
-                                            closedTop = generateCloseTag(top);
-                                            if (closedTop == temp)
+                                            if(foundInStack(st,generateOpenTag(temp))) //if closetag is missing
                                             {
+                                                char s[5];
+                                                string error = st.top() +" is missing its closing tag in line " + itoa(lineCount,s,10);
+                                                errors.push_back(error);
+                                                myOutput << closedTop << endl;
                                                 st.pop();
-                                                break;
+                                                if (st.empty())
+                                                {
+                                                    flag = 1;
+                                                    myOutput << generateOpenTag(temp) << endl;
+                                                    myOutput << line << endl;
+                                                    goto level_2;
+                                                }
+                                                top = st.top();
+                                                closedTop = generateCloseTag(top);
+                                                if (closedTop == temp)
+                                                {
+                                                    st.pop();
+                                                    myOutput << line << endl;
+                                                    goto level_2;
+                                                }
                                             }
-                                            myOutput << line << endl;
-                                            goto level_2;
+                                            else
+                                            {   
+                                                char s[5];
+                                                string error = temp +" is missing its opening tag in line " + itoa(lineCount,s,10);
+                                                errors.push_back(error);
+                                                myOutput << generateOpenTag(temp) << endl;
+                                                myOutput << line << endl;
+                                                goto level_2;
+                                            }
                                         }
-                                        else
-                                        {
-                                            myOutput << generateOpenTag(temp) << endl;
-                                            myOutput << line << endl;
-                                            goto level_2;
-                                        }
-                                    }
                                     }
                                 }
                                 if (!flag)
@@ -200,5 +209,13 @@ void correctError(string S)
             myFile.close();
         }
         myOutput.close();
+    }
+    return errors;
+}
+
+int main() {
+    vector<string> errors = correctError("test1.xml");
+    for(int i = 0; i < errors.size(); i++){
+        cout << errors[i] << "\n";
     }
 }
