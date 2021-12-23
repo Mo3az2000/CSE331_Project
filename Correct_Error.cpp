@@ -206,6 +206,9 @@ vector<string> correctError(string S)
             }
             while (!st.empty())
             {
+                char s[5];
+                string error = st.top() + " is missing its opening tag in line " + itoa(lineCount,s,10);
+                errors.push_back(error);
                 top3 = st.top();
                 myOutput << generateCloseTag(top3) << endl;
                 st.pop();
