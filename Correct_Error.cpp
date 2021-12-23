@@ -204,10 +204,11 @@ vector<string> correctError(string S)
                 level_2: 
                 int x = 0;
             }
+            int tempCount = lineCount+1;
             while (!st.empty())
             {
                 char s[5];
-                string error = st.top() + " is missing its opening tag in line " + itoa(lineCount,s,10);
+                string error = st.top() + " is missing its closing tag in line " + itoa(tempCount++,s,10);
                 errors.push_back(error);
                 top3 = st.top();
                 myOutput << generateCloseTag(top3) << endl;
@@ -226,3 +227,10 @@ int main() {
         cout << errors[i] << "\n";
     }
 }
+
+/*
+*Hint: the function deals with the general case, so the opening and closing tag are not always in the accurate place, but the file is always valid.
+*Hint: for best experience with the function u should write the text in the same line with its opening and closing tags.
+*Hint: the line number in the window containing the error list doesn’t have to be that accurate, but it simply refers to the place of the error in the input file.
+*Hint: Don’t try to delete the very first opening tag in the file (in the test file).
+*/
