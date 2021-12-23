@@ -58,7 +58,6 @@ vector<string> correctError(string S)
                 lineCount++;
                 if (lineCount == 1)
                 {
-                    myOutput << "<users>" << endl;
                     myOutput << line << endl;
                     st.push(line);
                     continue;
@@ -208,7 +207,6 @@ vector<string> correctError(string S)
                 myOutput << generateCloseTag(top3) << endl;
                 st.pop();
             }
-            myOutput << "</users>" << endl;
             myFile.close();
         }
         myOutput.close();
