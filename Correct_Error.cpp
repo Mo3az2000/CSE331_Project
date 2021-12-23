@@ -138,14 +138,17 @@ vector<string> correctError(string S)
                                     {
                                         while(true)
                                         {
-                                            if (isText(line[i-1]))
+                                            if (i > 0)
                                             {
-                                                char s[5];
-                                                string error = temp +" is missing its opening tag in line " + itoa(lineCount,s,10);
-                                                errors.push_back(error);
-                                                myOutput << generateOpenTag(temp) << endl;
-                                                myOutput << line << endl;
-                                                goto level_2;
+                                                if (isText(line[i-1]))
+                                                {
+                                                    char s[5];
+                                                    string error = temp +" is missing its opening tag in line " + itoa(lineCount,s,10);
+                                                    errors.push_back(error);
+                                                    myOutput << generateOpenTag(temp) << endl;
+                                                    myOutput << line << endl;
+                                                    goto level_2;
+                                                }
                                             }
                                             if(foundInStack(st,generateOpenTag(temp))) //if closetag is missing
                                             {
