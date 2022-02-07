@@ -6,7 +6,6 @@
 #include <fstream>
 
 using namespace std;
-
 struct node
 {
     string name = "";
@@ -123,17 +122,17 @@ vector <user> make_graph(vector <node> tags)
             users[user_index].posts[users[user_index].posts.size() - 1].topics.push_back(tags[i].content); //add a new topic to the last post
         }
         //now everything is ready except for the indices of the followers
-        for(int i = 0; i < users.size(); i++)
+    }
+    for(int i = 0; i < users.size(); i++)
+    {
+        for(int j = 0; j < users.size(); j++)
         {
-            for(int j = 0; j < users.size(); j++)
+            for(int k = 0; k < users[j].followers.size(); k++)
             {
-                for(int k = 0; k < users[j].followers.size(); k++)
+                if(users[j].followers[k].id == users[i].i.id)
                 {
-                    if(users[j].followers[k].id == users[i].i.id)
-                    {
-                        users[j].followers[k].index = users[i].i.index;
-                        break; //if found a follower then for the same user you won't find another follower with the same id since no parallel edges
-                    }
+                    users[j].followers[k].index = users[i].i.index;
+                    break; //if found a follower then for the same user you won't find another follower with the same id since no parallel edges
                 }
             }
         }
